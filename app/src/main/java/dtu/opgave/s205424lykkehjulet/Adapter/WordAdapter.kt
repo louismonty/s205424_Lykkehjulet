@@ -22,6 +22,9 @@ class WordAdapter (private val mList: List<WordModel>) : RecyclerView.Adapter<Wo
     // binds the list items to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
+
+
+
         val wordModel = mList[position]
         //if(GameModel.visablity) {
         holder.textView.text = wordModel.letter;

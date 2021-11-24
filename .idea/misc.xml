@@ -3,10 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/louis/AndroidStudioProjects/s205424Lykkehjulet/app/src/main/res/drawable-v24/ic_favorite_border.xml" value="0.22135416666666666" />
+        <entry key="..\:/Users/louis/AndroidStudioProjects/s205424Lykkehjulet/app/src/main/res/drawable-v24/ic_recent.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/louis/AndroidStudioProjects/s205424Lykkehjulet/app/src/main/res/layout/activity_fragment_container.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/louis/AndroidStudioProjects/s205424Lykkehjulet/app/src/main/res/layout/activity_start.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/louis/AndroidStudioProjects/s205424Lykkehjulet/app/src/main/res/layout/fragment_game.xml" value="0.33" />
+        <entry key="..\:/Users/louis/AndroidStudioProjects/s205424Lykkehjulet/app/src/main/res/layout/fragment_high_score.xml" value="0.20520833333333333" />
+        <entry key="..\:/Users/louis/AndroidStudioProjects/s205424Lykkehjulet/app/src/main/res/layout/fragment_start.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/louis/AndroidStudioProjects/s205424Lykkehjulet/app/src/main/res/layout/fragmnet_game.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/louis/AndroidStudioProjects/s205424Lykkehjulet/app/src/main/res/layout/word_item.xml" value="0.29846014492753625" />
+        <entry key="..\:/Users/louis/AndroidStudioProjects/s205424Lykkehjulet/app/src/main/res/menu/bottom_nav_menu.xml" value="0.20520833333333333" />
       </map>
     </option>
   </component>
