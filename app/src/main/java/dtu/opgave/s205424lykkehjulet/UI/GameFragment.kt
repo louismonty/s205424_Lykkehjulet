@@ -6,19 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.core.view.get
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dtu.opgave.s205424lykkehjulet.Adapter.HeartAdapter
 import dtu.opgave.s205424lykkehjulet.Adapter.WordAdapter
 import dtu.opgave.s205424lykkehjulet.Model.WordModel
 import dtu.opgave.s205424lykkehjulet.View.WordViewModel
 import java.util.*
 
 class GameFragment : Fragment() {
-    private val randomWord : String = "Test"
+    private var randomWord : String = "TEST"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +31,10 @@ class GameFragment : Fragment() {
 
     private val viewModel: WordViewModel by viewModels()
 
+    val data = ArrayList<WordModel>()
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,21 +43,32 @@ class GameFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_game, container, false)
         viewModel.score.value = 0
         viewModel.score.observe(viewLifecycleOwner,androidx.lifecycle.Observer { newInt->
-            view.findViewById<TextView>(R.id.score).text = newInt.toString()
+            view.findViewById<TextView>(R.id.score).text ="score" + newInt.toString()
         })
+        for(letter in randomWord) {
+            data.add(WordModel(letter.toString(), false))
+        }
+
+
+
         val button:Button = view.findViewById(R.id.button)
         button.setOnClickListener{
-            viewModel.score.value = viewModel.score.value!! +1
-            if (getFragmentManager() != null) {
-
-                getFragmentManager()
-                    ?.beginTransaction()
-                    .detach(this)
-                    .attach(this)
-                    .commit();
+            var guessRight = false
+            for(letter in data) {
+                if(letter.letter == view.findViewById<EditText>(R.id.editTextTextPersonName).text.toString()) {
+                    viewModel.score.value = viewModel.score.value!! + 1
+                    letter.visablity = true;
+                    guessRight = true
+                }
             }
+            if(!guessRight){
+                lives.removeAt(lives.size-1)
+            }
+            createTodayView(view)
+            createHearts(view)
         }
         createTodayView(view)
+        createHearts(view)
 
 
         return view
@@ -63,16 +80,23 @@ class GameFragment : Fragment() {
 
         today_event_recyclerview.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
-        val data = ArrayList<WordModel>()
-
-
-
-
-        for(letter in randomWord) {
-            data.add(WordModel(letter.toString(), false))
-        }
 
         val adapter = WordAdapter(data)
+
+        today_event_recyclerview.adapter = adapter
+    }
+
+    val lives = ArrayList<WordModel>()
+
+
+    private fun createHearts(view: View){
+
+        val today_event_recyclerview = view.findViewById<RecyclerView>(R.id.lives)
+
+        today_event_recyclerview.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+
+
+        val adapter = HeartAdapter(lives)
 
         today_event_recyclerview.adapter = adapter
     }
