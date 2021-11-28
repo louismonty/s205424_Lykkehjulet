@@ -13,6 +13,7 @@ import dtu.opgave.s205424lykkehjulet.databinding.ActivityMainBinding
 class FramgentContainerActivity: AppCompatActivity() {
     private lateinit var navController: NavController
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityFragmentContainerBinding.inflate(layoutInflater)

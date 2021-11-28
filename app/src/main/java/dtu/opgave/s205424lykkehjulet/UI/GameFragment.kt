@@ -3,6 +3,7 @@ package dtu.opgave.s205424lykkehjulet
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -22,6 +23,7 @@ import dtu.opgave.s205424lykkehjulet.Adapter.WordAdapter
 import dtu.opgave.s205424lykkehjulet.Model.WordModel
 import dtu.opgave.s205424lykkehjulet.View.WordViewModel
 import java.util.*
+import kotlin.random.Random
 
 class GameFragment : Fragment() {
     private var randomWord : String = "TEST"
@@ -43,14 +45,18 @@ class GameFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_game, container, false)
 
-        val sharedPreferences: SharedPreferences? = this.activity?.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
-        val editor = sharedPreferences?.edit()
+        val sharedPreferences: SharedPreferences = view.context.getSharedPreferences("test", Context.MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        val category = sharedPreferences.getString("category","")
+        view.findViewById<TextView>(R.id.gameText).text = category
 
+        val randomWord = getRandomWord()
 
-        viewModel.score.value = sharedPreferences?.getInt("score",0)
+        viewModel.score.value = sharedPreferences.getInt("score",0)
 
         
 
@@ -61,14 +67,14 @@ class GameFragment : Fragment() {
             }?.apply()
         })
         for(letter in randomWord) {
-            data.add(WordModel(letter.toString(), false))
+            data.add(WordModel(letter, false))
         }
 
-        lives.add(WordModel("t",true))
-        lives.add(WordModel("t",true))
-        lives.add(WordModel("t",true))
-        lives.add(WordModel("t",true))
-        lives.add(WordModel("t",true))
+        lives.add(WordModel('t',true))
+        lives.add(WordModel('t',true))
+        lives.add(WordModel('t',true))
+        lives.add(WordModel('t',true))
+        lives.add(WordModel('t',true))
 
 
 
@@ -76,7 +82,7 @@ class GameFragment : Fragment() {
         button.setOnClickListener{
             var guessRight = false
             for(letter in data) {
-                if(letter.letter == view.findViewById<EditText>(R.id.editTextTextPersonName).text.toString()) {
+                if(letter.letter.toString() == view.findViewById<EditText>(R.id.editTextTextPersonName).text.toString()) {
                     viewModel.score.value = viewModel.score.value!! + 1
                     letter.visablity = true;
                     guessRight = true
@@ -85,13 +91,13 @@ class GameFragment : Fragment() {
             if(!guessRight){
                 lives.removeAt(lives.size-1)
             }
-            createTodayView(view)
+            createTodayView(view, randomWord)
             createHearts(view)
         }
 
 
 
-        createTodayView(view)
+        createTodayView(view, randomWord)
         createHearts(view)
 
 
@@ -106,18 +112,9 @@ class GameFragment : Fragment() {
 
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) { // Here You have to restore count value
-        super.onActivityCreated(savedInstanceState)
-        if(savedInstanceState != null ){
-            viewModel.score.value = savedInstanceState.getInt("score")
-        }else{
-            viewModel.score.value = 0
-        }
-
-    }
 
 
-    private fun createTodayView(view: View){
+    private fun createTodayView(view: View,randomWord:String){
 
         val today_event_recyclerview = view.findViewById<RecyclerView>(R.id.displayText)
 
@@ -127,12 +124,9 @@ class GameFragment : Fragment() {
 
 
 
-
-
-        data.add(WordModel("T",true))
-        data.add(WordModel("e",false))
-        data.add(WordModel("s",true))
-        data.add(WordModel("T",false))
+        for (letter in randomWord){
+            data.add(WordModel(letter,false))
+        }
 
         val adapter = WordAdapter(data)
 
@@ -157,5 +151,17 @@ class GameFragment : Fragment() {
         return "test"
     }
     fun reload(){}
+    fun findRandomWord( stringCategory: String): String? {
+        val stringArray:Array<String> = arrayOf("test","test")
+        val res: Resources = resources
+        if(stringCategory == "planets_array") {
+            val stringArray = res.getStringArray(R.array.planets_array)
+        }else{
+            val stringArray = res.getStringArray(R.array.some_shit)
+        }
+
+
+        return  stringArray[Random.nextInt(0, stringArray.size)]
+    }
 
 }

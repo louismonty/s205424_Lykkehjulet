@@ -27,7 +27,7 @@ class WordAdapter (private val mList: List<WordModel>) : RecyclerView.Adapter<Wo
 
         val wordModel = mList[position]
         //if(GameModel.visablity) {
-        holder.textView.text = wordModel.letter;
+        holder.textView.text = wordModel.letter.toString();
         if(wordModel.visablity){
             holder.textView.visibility = View.VISIBLE
         }else{
