@@ -5,9 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/game"
-    tools:context=".UI.GameFragment">
+    tools:context=".UI.GameFragment"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
 
-    <!-- TODO: Update blank fragment layout -->
 
     <TextView
         android:id="@+id/gameText"
@@ -15,7 +16,9 @@
         android:layout_height="77dp"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="470dp"
-        android:text="TextView" />
+        android:text="TextView"
+        android:nextFocusUp="@id/gameText"
+        android:nextFocusLeft="@id/gameText"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/displayText"
@@ -67,6 +70,6 @@
         android:ems="10"
         android:inputType="textPersonName"
         android:maxLength="1"
-        android:text="Tast et bogstav og gæt" />
+        android:text="" />
 
 </RelativeLayout>

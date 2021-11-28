@@ -52,6 +52,7 @@ class GameFragment : Fragment() {
 
         viewModel.score.value = sharedPreferences?.getInt("score",0)
 
+        
 
         viewModel.score.observe(viewLifecycleOwner,androidx.lifecycle.Observer { newInt->
             view.findViewById<TextView>(R.id.score).text ="score" + newInt.toString()
@@ -122,6 +123,16 @@ class GameFragment : Fragment() {
 
         today_event_recyclerview.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
+        val data = ArrayList<WordModel>()
+
+
+
+
+
+        data.add(WordModel("T",true))
+        data.add(WordModel("e",false))
+        data.add(WordModel("s",true))
+        data.add(WordModel("T",false))
 
         val adapter = WordAdapter(data)
 
