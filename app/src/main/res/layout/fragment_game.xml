@@ -55,8 +55,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="123dp"
-        android:layout_marginBottom="139dp"
+        android:layout_marginEnd="101dp"
+        android:layout_marginBottom="150dp"
         android:text="guess" />
 
     <EditText
@@ -71,5 +71,15 @@
         android:inputType="textPersonName"
         android:maxLength="1"
         android:text="" />
+
+    <Button
+        android:id="@+id/spin"
+        android:layout_width="178dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="98dp"
+        android:layout_marginBottom="97dp"
+        android:text="Spin" />
 
 </RelativeLayout>

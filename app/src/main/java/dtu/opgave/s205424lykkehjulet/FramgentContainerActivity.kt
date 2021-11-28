@@ -7,14 +7,17 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import dtu.opgave.s205424lykkehjulet.Model.WordModel
 import dtu.opgave.s205424lykkehjulet.databinding.ActivityFragmentContainerBinding
 import dtu.opgave.s205424lykkehjulet.databinding.ActivityMainBinding
+import java.util.ArrayList
 
 class FramgentContainerActivity: AppCompatActivity() {
     private lateinit var navController: NavController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         val binding = ActivityFragmentContainerBinding.inflate(layoutInflater)
         setContentView(binding.root)

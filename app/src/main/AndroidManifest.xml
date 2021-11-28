@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.S205424Lykkehjulet">
         <activity
+            android:name=".GameOver"
+            android:exported="false" />
+        <activity
             android:name=".StartActivity"
             android:exported="true" />
         <activity
@@ -26,7 +29,7 @@
             android:name=".FramgentContainerActivity"
             android:exported="true"
             android:label="FramgentContainerActivity"
-            android:windowSoftInputMode="stateVisible|adjustPan"/>
+            android:windowSoftInputMode="stateVisible|adjustPan" />
     </application>
 
 </manifest>
