@@ -1,7 +1,6 @@
 package dtu.opgave.s205424lykkehjulet
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Resources
@@ -11,29 +10,38 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
-import androidx.activity.viewModels
-import androidx.core.view.get
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import dtu.opgave.s205424lykkehjulet.Adapter.HeartAdapter
 import dtu.opgave.s205424lykkehjulet.Adapter.WordAdapter
+import dtu.opgave.s205424lykkehjulet.Logic.Guees
+import dtu.opgave.s205424lykkehjulet.Logic.RadomWord
+import dtu.opgave.s205424lykkehjulet.Logic.Wheel
+import dtu.opgave.s205424lykkehjulet.Model.HighscoreModel
+import dtu.opgave.s205424lykkehjulet.Model.HighscoreModelCollection
 import dtu.opgave.s205424lykkehjulet.Model.WordModel
+import dtu.opgave.s205424lykkehjulet.Model.WordModelCollection
+import dtu.opgave.s205424lykkehjulet.UI.GameOver
 import dtu.opgave.s205424lykkehjulet.View.WordViewModel
-import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.random.Random
 
 class GameFragment : Fragment() {
 
-    var hasSpun = false
-    var reward:Int = 0
+    private var hasSpun = false
+    private var reward:Int = 0
 
-    var data = ArrayList<WordModel>()
+    private lateinit var data:WordModelCollection
+    private var data_word = ArrayList<WordModel>()
+    private val lives = ArrayList<WordModel>()
     private val viewModel: WordViewModel by viewModels()
+
+    private val wheel:Wheel = Wheel()
+    private val randomWordclas:RadomWord = RadomWord()
+
+    private  val guess:Guees = Guees()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,24 +58,37 @@ class GameFragment : Fragment() {
 
 
 
-        // Inflate the layout for this fragment
+        // Inflate the layout for gameFragment
         val view = inflater.inflate(R.layout.fragment_game, container, false)
 
+        //shared preferences to store data
         val sharedPreferences: SharedPreferences = view.context.getSharedPreferences("test", Context.MODE_PRIVATE)
+        //shared preferences to edit when data needs to be added
         val editor = sharedPreferences.edit()
+        //finds the category thats stred sharedPreferences
         val category = sharedPreferences.getString("category","")
+        //sets the text to show category
         view.findViewById<TextView>(R.id.gameText).text = category
 
-        var randomWord = findRandomWord(category!!)!!
+        //gets random words from catogory
+        var randomWord = randomWordclas.findRandomWord(category!!,resources)!!
 
-        if(data.size == 0){
-            createData(randomWord)
+        val gson:Gson = Gson();
+        val json = sharedPreferences.getString("data","")
+        data = gson.fromJson<WordModelCollection>(json,WordModelCollection::class.java)
+
+
+        //if no data creates a new word
+        if(data == null){
+            val res: Resources = resources
+            createData(sharedPreferences,randomWord)
         }
 
+        //gets score
         viewModel.score.value = sharedPreferences.getInt("score",0)
 
         
-
+        //makes score live data
         viewModel.score.observe(viewLifecycleOwner,androidx.lifecycle.Observer { newInt->
             view.findViewById<TextView>(R.id.score).text ="score" + newInt.toString()
             editor?.apply {
@@ -75,7 +96,7 @@ class GameFragment : Fragment() {
             }?.apply()
         })
 
-
+        //creates model to make recycle view (letter wont be shown)
         lives.add(WordModel('t',true))
         lives.add(WordModel('t',true))
         lives.add(WordModel('t',true))
@@ -83,57 +104,56 @@ class GameFragment : Fragment() {
         lives.add(WordModel('t',true))
 
 
+        //spins the wheel and show text
         val spinButton:Button = view.findViewById(R.id.spin)
         spinButton.setOnClickListener{
             if(!hasSpun){
-                reward = spinwhele(view)
+                reward = wheel.spinwhele(view,viewModel,lives)
                 if(reward !=0) {
                     hasSpun = true
                 }
             }
         }
 
-
+        //checks a guees
         val button:Button = view.findViewById(R.id.button)
         button.setOnClickListener{
-            if (hasSpun){
-                var guessRight = false
+            if (hasSpun) {
+
+                guess.Guess(view,viewModel,lives,data.list,reward)
+
                 var guessAll = true
-                for (letter in data) {
-                    if(!letter.visablity) {
-                        if (letter.letter.toString() == view.findViewById<EditText>(R.id.editTextTextPersonName).text.toString()) {
-                            viewModel.score.value = viewModel.score.value!! + reward
-                            letter.visablity = true;
-                            guessRight = true
-                        }
-                    }
+                if (lives.size == 0) {
+                    //saves score and start gameover activity
+                    sharedPreferences.edit().putInt("score",viewModel.score.value!!).apply()
+                    val intent = Intent(getActivity(), GameOver::class.java)
+                    getActivity()?.startActivity(intent)
+
+
                 }
-                if (!guessRight) {
-                    lives.removeAt(lives.size - 1)
-                }
-                for (letter in data){
+                //checks if all letters are guessed
+                for (letter in data.list){
                     if(!letter.visablity){
                         guessAll = false
                     }
                 }
+                //if all words are guessed finds new word
                 if(guessAll){
-                    randomWord = findRandomWord(category!!)!!
-                    createData(randomWord)
-                    createTodayView(view,randomWord)
+                    randomWord = randomWordclas.findRandomWord(category!!,resources)!!
+                    createData(sharedPreferences,randomWord)
                 }
-                createTodayView(view, randomWord)
+                //recreates recycle view
+                UpdateData(sharedPreferences,data)
                 createHearts(view)
-                hasSpun = false
+                createWordView(view,randomWord)
+                hasSpun =false
             }
-            if(lives.size == 0){
-                val intent = Intent (getActivity(), GameOver::class.java)
-                getActivity()?.startActivity(intent)
-            }
+
         }
 
 
-
-        createTodayView(view, randomWord)
+        //creates recycle view
+        createWordView(view, randomWord)
         createHearts(view)
 
 
@@ -141,87 +161,70 @@ class GameFragment : Fragment() {
     }
 
 
-    override fun onSaveInstanceState(outState: Bundle) { // Here You have to save count value
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        //saves data
         outState.putInt("score",viewModel.score.value!!)
 
+        val gson:Gson = Gson()
+        val json:String = gson.toJson(data);
+        outState.putString("highScore", json);
+
 
     }
 
 
 
-    private fun createTodayView(view: View,randomWord:String){
+    private fun createWordView(view: View,randomWord:String){
 
-        val today_event_recyclerview = view.findViewById<RecyclerView>(R.id.displayText)
+        val Word_recyclerview = view.findViewById<RecyclerView>(R.id.displayText)
 
-        today_event_recyclerview.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        Word_recyclerview.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
+        val adapter = WordAdapter(data.list)
 
-
-
-        val adapter = WordAdapter(data)
-
-        today_event_recyclerview.adapter = adapter
+        Word_recyclerview.adapter = adapter
     }
 
-    val lives = ArrayList<WordModel>()
+
 
     private fun createHearts(view: View){
 
-        val today_event_recyclerview = view.findViewById<RecyclerView>(R.id.lives)
+        val Heart_recyclerview = view.findViewById<RecyclerView>(R.id.lives)
 
-        today_event_recyclerview.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-
+        Heart_recyclerview.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
         val adapter = HeartAdapter(lives)
 
-        today_event_recyclerview.adapter = adapter
+        Heart_recyclerview.adapter = adapter
     }
 
 
-    fun findRandomWord( stringCategory: String): String? {
-        var stringArray:Array<String>
-        val res: Resources = resources
-        if(stringCategory == "planets_array") {
-            stringArray = res.getStringArray(R.array.planets_array)
-        }else{
-            stringArray = res.getStringArray(R.array.some_shit)
-        }
-
-
-        return  stringArray[Random.nextInt(0, stringArray.size)]
-    }
-
-    fun createData(randomWord:String) {
-        data = ArrayList<WordModel>()
+    private fun createData(sharedPreferences: SharedPreferences,randomWord: String){
+        data_word = ArrayList<WordModel>()
         for(letter in randomWord) {
-            data.add(WordModel(letter, false))
+            data_word.add(WordModel(letter, false))
         }
+        val data = WordModelCollection(
+            data_word
+        )
 
+        val editor = sharedPreferences.edit();
+        val gson: Gson = Gson()
+        val json:String = gson.toJson(data);
+        editor.putString("data", json);
+        editor.commit();
     }
-    fun spinwhele(view:View):Int{
-       val spin = Random.nextInt(1,14)
-        var ret:Int
-        if(spin<11){
-            view.findViewById<TextView>(R.id.gameText).text =   "Du får:" + (spin*100).toString()
-            ret = spin *100
-        }else if(spin == 11){
-            view.findViewById<TextView>(R.id.gameText).text =   "Du gik bankrupt"
-            viewModel.score.value = 0
-            ret = 0
-        }else if(spin == 12){
-            view.findViewById<TextView>(R.id.gameText).text =   "Du fik en ekstra tur"
-            ret = 0
-            lives.add(WordModel('t',true))
-            createHearts(view)
-        }else{
-            view.findViewById<TextView>(R.id.gameText).text =   "Du mistede en tur"
-            ret = 0
-            lives.removeAt(lives.size - 1)
-            createHearts(view)
-        }
-        return ret
 
+    private fun UpdateData(sharedPreferences: SharedPreferences,data:WordModelCollection){
+        val editor = sharedPreferences.edit();
+        val gson:Gson = Gson()
+        val json:String = gson.toJson(data);
+        editor.putString("data", json);
+        editor.commit();
     }
+
+
+
 
 }

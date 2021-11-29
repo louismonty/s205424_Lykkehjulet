@@ -1,13 +1,13 @@
-package dtu.opgave.s205424lykkehjulet
+package dtu.opgave.s205424lykkehjulet.UI
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
+import dtu.opgave.s205424lykkehjulet.R
 
 class StartActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

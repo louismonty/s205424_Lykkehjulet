@@ -1,4 +1,4 @@
-package dtu.opgave.s205424lykkehjulet
+package dtu.opgave.s205424lykkehjulet.UI
 
 import android.os.Bundle
 import android.widget.Button

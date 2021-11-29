@@ -1,4 +1,4 @@
-package dtu.opgave.s205424lykkehjulet
+package dtu.opgave.s205424lykkehjulet.UI
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -7,17 +7,15 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import dtu.opgave.s205424lykkehjulet.Model.WordModel
+import dtu.opgave.s205424lykkehjulet.R
 import dtu.opgave.s205424lykkehjulet.databinding.ActivityFragmentContainerBinding
-import dtu.opgave.s205424lykkehjulet.databinding.ActivityMainBinding
-import java.util.ArrayList
 
 class FramgentContainerActivity: AppCompatActivity() {
     private lateinit var navController: NavController
 
-
+    //taken from lesson Lektion 07
+    //https://learn.inside.dtu.dk/d2l/le/content/80550/viewContent/334269/View
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
         val binding = ActivityFragmentContainerBinding.inflate(layoutInflater)
         setContentView(binding.root)

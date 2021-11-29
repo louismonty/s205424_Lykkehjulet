@@ -10,10 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.S205424Lykkehjulet">
         <activity
-            android:name=".GameOver"
+            android:name=".UI.GameOver"
             android:exported="false" />
         <activity
-            android:name=".StartActivity"
+            android:name=".UI.StartActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
@@ -26,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FramgentContainerActivity"
+            android:name=".UI.FramgentContainerActivity"
             android:exported="true"
             android:label="FramgentContainerActivity"
             android:windowSoftInputMode="stateVisible|adjustPan" />

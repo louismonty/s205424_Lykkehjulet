@@ -21,19 +21,13 @@ class WordAdapter (private val mList: List<WordModel>) : RecyclerView.Adapter<Wo
     }
     // binds the list items to a view
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
-
-
-
         val wordModel = mList[position]
-        //if(GameModel.visablity) {
         holder.textView.text = wordModel.letter.toString();
         if(wordModel.visablity){
             holder.textView.visibility = View.VISIBLE
         }else{
             holder.textView.visibility = View.INVISIBLE
         }
-        //}else{holder.textView.text = ""}
     }
 
     // return the number of the items in the list
@@ -41,15 +35,9 @@ class WordAdapter (private val mList: List<WordModel>) : RecyclerView.Adapter<Wo
         return mList.size
     }
 
-    /*fun getTextView(index : Int):TextView{
-
-    }
-
-     */
 
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
-        val imageView: ImageView = itemView.findViewById(R.id.imageView)
         val textView: TextView = itemView.findViewById(R.id.textView)
     }
 }

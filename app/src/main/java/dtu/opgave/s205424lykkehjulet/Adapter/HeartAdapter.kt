@@ -29,11 +29,6 @@ class HeartAdapter (private val mList: List<WordModel>) : RecyclerView.Adapter<H
         return mList.size
     }
 
-    /*fun getTextView(index : Int):TextView{
-
-    }
-
-     */
 
     // Holds the views for adding it to image and text
     class ViewHolder(ItemView: View) : RecyclerView.ViewHolder(ItemView) {
