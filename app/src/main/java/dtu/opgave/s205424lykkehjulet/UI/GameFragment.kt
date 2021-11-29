@@ -74,14 +74,18 @@ class GameFragment : Fragment() {
         var randomWord = randomWordclas.findRandomWord(category!!,resources)!!
 
         val gson:Gson = Gson();
-        val json = sharedPreferences.getString("data","")
+        var json = sharedPreferences.getString("data",null)
+        if (json == null){
+            createData(sharedPreferences,randomWord)
+            json = sharedPreferences.getString("data",null)
+        }
         data = gson.fromJson<WordModelCollection>(json,WordModelCollection::class.java)
 
 
         //if no data creates a new word
         if(data == null){
             val res: Resources = resources
-            createData(sharedPreferences,randomWord)
+
         }
 
         //gets score
