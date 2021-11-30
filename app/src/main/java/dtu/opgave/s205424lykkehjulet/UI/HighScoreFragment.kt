@@ -19,6 +19,7 @@ import dtu.opgave.s205424lykkehjulet.R
 
 
 class HighScoreFragment : Fragment() {
+    val gson:Gson = Gson();
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,14 +30,14 @@ class HighScoreFragment : Fragment() {
         val sharedPreferences: SharedPreferences = view.context.getSharedPreferences("test", Context.MODE_PRIVATE)
 
 
-        val gson:Gson = Gson();
-        val json = sharedPreferences.getString("highScore","")
-        val data = gson.fromJson<HighscoreModelCollection>(json,HighscoreModelCollection::class.java)
-
-
-        if(data == null) {
+        var json = sharedPreferences.getString("highScore",null)
+        if (json == null){
             createData(sharedPreferences)
+            json = sharedPreferences.getString("highScore",null)
         }
+        var data = gson.fromJson<HighscoreModelCollection>(json,HighscoreModelCollection::class.java)
+
+
 
         createHighScore(view,data)
 
@@ -47,13 +48,12 @@ class HighScoreFragment : Fragment() {
 
 }
     private fun createData(sharedPreferences: SharedPreferences){
-        val data = HighscoreModelCollection(arrayListOf<HighscoreModel>(
+        var data = HighscoreModelCollection(arrayListOf<HighscoreModel>(
             HighscoreModel("Louis",100),
             HighscoreModel("Louis",1000)
         ))
 
         val editor = sharedPreferences.edit();
-        val gson: Gson = Gson()
         val json:String = gson.toJson(data);
         editor.putString("highScore", json);
         editor.commit();
@@ -61,7 +61,6 @@ class HighScoreFragment : Fragment() {
 
     private fun UpdateData(sharedPreferences: SharedPreferences, data: HighscoreModelCollection){
         val editor = sharedPreferences.edit();
-        val gson: Gson = Gson()
         val json:String = gson.toJson(data);
         editor.putString("highScore", json);
         editor.commit();

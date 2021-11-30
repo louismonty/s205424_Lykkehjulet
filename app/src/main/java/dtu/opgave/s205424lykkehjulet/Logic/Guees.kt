@@ -23,7 +23,9 @@ class Guees {
             }
         }
         if (!guessRight) {
-            lives.removeAt(lives.size - 1)
+            if (lives.size!=0) {
+                lives.removeAt(lives.size-1)
+            }
         }
     }
 

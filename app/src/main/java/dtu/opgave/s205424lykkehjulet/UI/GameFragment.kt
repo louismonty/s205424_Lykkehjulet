@@ -20,8 +20,6 @@ import dtu.opgave.s205424lykkehjulet.Adapter.WordAdapter
 import dtu.opgave.s205424lykkehjulet.Logic.Guees
 import dtu.opgave.s205424lykkehjulet.Logic.RadomWord
 import dtu.opgave.s205424lykkehjulet.Logic.Wheel
-import dtu.opgave.s205424lykkehjulet.Model.HighscoreModel
-import dtu.opgave.s205424lykkehjulet.Model.HighscoreModelCollection
 import dtu.opgave.s205424lykkehjulet.Model.WordModel
 import dtu.opgave.s205424lykkehjulet.Model.WordModelCollection
 import dtu.opgave.s205424lykkehjulet.UI.GameOver
@@ -34,14 +32,17 @@ class GameFragment : Fragment() {
     private var reward:Int = 0
 
     private lateinit var data:WordModelCollection
+    private lateinit var lives:WordModelCollection
+    private var lives_collection = ArrayList<WordModel>()
     private var data_word = ArrayList<WordModel>()
-    private val lives = ArrayList<WordModel>()
     private val viewModel: WordViewModel by viewModels()
 
     private val wheel:Wheel = Wheel()
     private val randomWordclas:RadomWord = RadomWord()
 
     private  val guess:Guees = Guees()
+
+    val gson:Gson = Gson();
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,18 +69,27 @@ class GameFragment : Fragment() {
         //finds the category thats stred sharedPreferences
         val category = sharedPreferences.getString("category","")
         //sets the text to show category
-        view.findViewById<TextView>(R.id.gameText).text = category
+        view.findViewById<TextView>(R.id.gameText).text = "category : "+category
 
         //gets random words from catogory
         var randomWord = randomWordclas.findRandomWord(category!!,resources)!!
 
-        val gson:Gson = Gson();
+
         var json = sharedPreferences.getString("data",null)
         if (json == null){
             createData(sharedPreferences,randomWord)
             json = sharedPreferences.getString("data",null)
         }
         data = gson.fromJson<WordModelCollection>(json,WordModelCollection::class.java)
+
+
+        json = sharedPreferences.getString("lives",null)
+        if (json == null){
+            createHearts(sharedPreferences)
+            UpdateHearts(sharedPreferences)
+            json = sharedPreferences.getString("lives",null)
+        }
+        lives = gson.fromJson<WordModelCollection>(json,WordModelCollection::class.java)
 
 
         //if no data creates a new word
@@ -101,18 +111,14 @@ class GameFragment : Fragment() {
         })
 
         //creates model to make recycle view (letter wont be shown)
-        lives.add(WordModel('t',true))
-        lives.add(WordModel('t',true))
-        lives.add(WordModel('t',true))
-        lives.add(WordModel('t',true))
-        lives.add(WordModel('t',true))
+
 
 
         //spins the wheel and show text
         val spinButton:Button = view.findViewById(R.id.spin)
         spinButton.setOnClickListener{
             if(!hasSpun){
-                reward = wheel.spinwhele(view,viewModel,lives)
+                reward = wheel.spinwhele(view,viewModel,lives.list)
                 if(reward !=0) {
                     hasSpun = true
                 }
@@ -124,10 +130,10 @@ class GameFragment : Fragment() {
         button.setOnClickListener{
             if (hasSpun) {
 
-                guess.Guess(view,viewModel,lives,data.list,reward)
+                guess.Guess(view,viewModel,lives.list,data.list,reward)
 
                 var guessAll = true
-                if (lives.size == 0) {
+                if (lives.list.size == 0) {
                     //saves score and start gameover activity
                     sharedPreferences.edit().putInt("score",viewModel.score.value!!).apply()
                     val intent = Intent(getActivity(), GameOver::class.java)
@@ -148,7 +154,8 @@ class GameFragment : Fragment() {
                 }
                 //recreates recycle view
                 UpdateData(sharedPreferences,data)
-                createHearts(view)
+                UpdateHearts(sharedPreferences)
+                createHeartsView(view)
                 createWordView(view,randomWord)
                 hasSpun =false
             }
@@ -158,7 +165,7 @@ class GameFragment : Fragment() {
 
         //creates recycle view
         createWordView(view, randomWord)
-        createHearts(view)
+        createHeartsView(view)
 
 
         return view
@@ -170,7 +177,7 @@ class GameFragment : Fragment() {
         //saves data
         outState.putInt("score",viewModel.score.value!!)
 
-        val gson:Gson = Gson()
+
         val json:String = gson.toJson(data);
         outState.putString("highScore", json);
 
@@ -192,13 +199,13 @@ class GameFragment : Fragment() {
 
 
 
-    private fun createHearts(view: View){
+    private fun createHeartsView(view: View){
 
         val Heart_recyclerview = view.findViewById<RecyclerView>(R.id.lives)
 
         Heart_recyclerview.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
 
-        val adapter = HeartAdapter(lives)
+        val adapter = HeartAdapter(lives.list)
 
         Heart_recyclerview.adapter = adapter
     }
@@ -214,7 +221,6 @@ class GameFragment : Fragment() {
         )
 
         val editor = sharedPreferences.edit();
-        val gson: Gson = Gson()
         val json:String = gson.toJson(data);
         editor.putString("data", json);
         editor.commit();
@@ -222,9 +228,35 @@ class GameFragment : Fragment() {
 
     private fun UpdateData(sharedPreferences: SharedPreferences,data:WordModelCollection){
         val editor = sharedPreferences.edit();
-        val gson:Gson = Gson()
         val json:String = gson.toJson(data);
         editor.putString("data", json);
+        editor.commit();
+    }
+
+
+    private fun createHearts(sharedPreferences: SharedPreferences){
+        lives_collection = ArrayList<WordModel>()
+
+        lives_collection.add(WordModel('t',true))
+        lives_collection.add(WordModel('t',true))
+        lives_collection.add(WordModel('t',true))
+        lives_collection.add(WordModel('t',true))
+        lives_collection.add(WordModel('t',true))
+
+        lives = WordModelCollection(
+            lives_collection
+        )
+
+        val editor = sharedPreferences.edit();
+        val json:String = gson.toJson(lives);
+        editor.putString("lives", json);
+        editor.commit();
+    }
+
+    private fun UpdateHearts(sharedPreferences: SharedPreferences){
+        val editor = sharedPreferences.edit();
+        val json:String = gson.toJson(lives);
+        editor.putString("lives", json);
         editor.commit();
     }
 

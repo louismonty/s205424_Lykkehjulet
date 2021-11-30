@@ -19,6 +19,9 @@ import dtu.opgave.s205424lykkehjulet.UI.StartActivity
 import org.w3c.dom.Text
 
 class GameOver : AppCompatActivity() {
+    private lateinit var data:HighscoreModelCollection
+
+    val gson:Gson = Gson();
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game_over)
@@ -27,25 +30,28 @@ class GameOver : AppCompatActivity() {
         var hasScoreChange = true
 
         //loads score
-        val sharedpreference = getSharedPreferences("test", Context.MODE_PRIVATE)
-        val score = sharedpreference.getInt("score", 0)
+        val sharedPreferences = getSharedPreferences("test", Context.MODE_PRIVATE)
+        val score = sharedPreferences.getInt("score", 0)
 
         val hisgscoreText = findViewById<TextView>(R.id.textView2)
-        hisgscoreText.text = "Highscore : "+ score
+        hisgscoreText.text = "your score : "+ score + "\n highscores:"
 
         //loads highscore as a objekt gson
-        val gson:Gson = Gson();
-        val json = sharedpreference.getString("highScore","")
-        val data = gson.fromJson<HighscoreModelCollection>(json,HighscoreModelCollection::class.java)
+        var json = sharedPreferences.getString("highScore",null)
+        if (json == null){
+            createData(sharedPreferences)
+            json = sharedPreferences.getString("highScore",null)
+        }
+        data = gson.fromJson<HighscoreModelCollection>(json,HighscoreModelCollection::class.java)
 
         //if no data creates the data from scratch
         if(data == null) {
-            createData(sharedpreference)
+            createData(sharedPreferences)
         }
 
         //if click restarts the gamer
         val button: Button =  findViewById(R.id.restartGame)
-        createHighScore(data )
+        createHighScore(data)
         button.setOnClickListener {
             startActivity(Intent(this, StartActivity::class.java))
         }
@@ -56,11 +62,11 @@ class GameOver : AppCompatActivity() {
         AddHighScore.setOnClickListener {
             if (hasScoreChange) {
                 val name = textIpunt.text.toString()
-                val score = sharedpreference.getInt("score", 0)
+                val score = sharedPreferences.getInt("score", 0)
                 data.list.add(HighscoreModel(name, score))
                 //recreates recycle view
                 createHighScore(data)
-                UpdateData(sharedpreference,data)
+                UpdateData(sharedPreferences,data)
                 hasScoreChange = false
             }
         }
@@ -69,10 +75,9 @@ class GameOver : AppCompatActivity() {
     }
 
     private fun createData(sharedPreferences: SharedPreferences){
-        val data = HighscoreModelCollection(arrayListOf<HighscoreModel>(HighscoreModel("Louis",100),HighscoreModel("Louis",1000)))
+        data = HighscoreModelCollection(arrayListOf<HighscoreModel>(HighscoreModel("Louis",100),HighscoreModel("Louis",1000)))
 
         val editor = sharedPreferences.edit();
-        val gson:Gson = Gson()
         val json:String = gson.toJson(data);
         editor.putString("highScore", json);
         editor.commit();
@@ -80,7 +85,6 @@ class GameOver : AppCompatActivity() {
 
     private fun UpdateData(sharedPreferences: SharedPreferences,data:HighscoreModelCollection){
         val editor = sharedPreferences.edit();
-        val gson:Gson = Gson()
         val json:String = gson.toJson(data);
         editor.putString("highScore", json);
         editor.commit();

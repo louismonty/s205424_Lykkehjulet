@@ -29,6 +29,7 @@ class StartActivity : AppCompatActivity() {
         val button: Button = findViewById(R.id.button2)
         sharedpreference.edit().putInt("score",0).apply()
         sharedpreference.edit().putString("data",null).apply()
+        sharedpreference.edit().putString("lives",null).apply()
         button.setOnClickListener {
 
             sharedpreference.edit().putString("category",spinner.selectedItem.toString()).apply()

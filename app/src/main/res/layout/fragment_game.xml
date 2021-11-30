@@ -20,6 +20,16 @@
         android:nextFocusUp="@id/gameText"
         android:text="TextView" />
 
+    <TextView
+        android:id="@+id/spinText"
+        android:layout_width="match_parent"
+        android:layout_height="43dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="470dp"
+        android:nextFocusLeft="@id/gameText"
+        android:nextFocusUp="@id/gameText"
+        android:text="" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/displayText"
         android:layout_width="match_parent"
@@ -71,6 +81,7 @@
         android:inputType="textPersonName"
         android:maxLength="1"
         android:text="" />
+
 
     <Button
         android:id="@+id/spin"
