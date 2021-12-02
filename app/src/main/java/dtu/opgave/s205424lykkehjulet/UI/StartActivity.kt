@@ -18,7 +18,7 @@ class StartActivity : AppCompatActivity() {
         val spinner: Spinner = findViewById(R.id.spinner)
         ArrayAdapter.createFromResource(
             this,
-            R.array.game_Cat,
+            R.array.Category,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -27,6 +27,7 @@ class StartActivity : AppCompatActivity() {
 
         val sharedpreference = getSharedPreferences("test", Context.MODE_PRIVATE)
         val button: Button = findViewById(R.id.button2)
+        //sets data to null
         sharedpreference.edit().putInt("score",0).apply()
         sharedpreference.edit().putString("data",null).apply()
         sharedpreference.edit().putString("lives",null).apply()

@@ -216,7 +216,7 @@ class GameFragment : Fragment() {
         for(letter in randomWord) {
             data_word.add(WordModel(letter, false))
         }
-        val data = WordModelCollection(
+        data = WordModelCollection(
             data_word
         )
 

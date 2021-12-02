@@ -15,7 +15,7 @@ class Guees {
         var guessAll = true
         for (letter in data) {
             if (!letter.visablity) {
-                if (letter.letter.toString() == view.findViewById<EditText>(R.id.editTextTextPersonName).text.toString()) {
+                if (letter.letter.toString().uppercase() == view.findViewById<EditText>(R.id.editTextTextPersonName).text.toString().uppercase()) {
                     viewModel.score.value = viewModel.score.value!! + reward
                     letter.visablity = true;
                     guessRight = true

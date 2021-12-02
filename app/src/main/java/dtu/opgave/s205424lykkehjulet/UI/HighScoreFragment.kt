@@ -29,7 +29,7 @@ class HighScoreFragment : Fragment() {
 
         val sharedPreferences: SharedPreferences = view.context.getSharedPreferences("test", Context.MODE_PRIVATE)
 
-
+        //gets data
         var json = sharedPreferences.getString("highScore",null)
         if (json == null){
             createData(sharedPreferences)
@@ -47,6 +47,7 @@ class HighScoreFragment : Fragment() {
 
 
 }
+    //creates standard data
     private fun createData(sharedPreferences: SharedPreferences){
         var data = HighscoreModelCollection(arrayListOf<HighscoreModel>(
             HighscoreModel("Louis",100),
@@ -59,12 +60,6 @@ class HighScoreFragment : Fragment() {
         editor.commit();
     }
 
-    private fun UpdateData(sharedPreferences: SharedPreferences, data: HighscoreModelCollection){
-        val editor = sharedPreferences.edit();
-        val json:String = gson.toJson(data);
-        editor.putString("highScore", json);
-        editor.commit();
-    }
 
     //creates recycle view
     private fun createHighScore(view: View,data: HighscoreModelCollection){

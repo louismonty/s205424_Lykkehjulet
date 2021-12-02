@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="game_Cat">
+    <string-array name="Category">
         <item>planets_array</item>
-        <item>some_shit</item>
+        <item>Languages</item>
 
     </string-array>
 
+    <!--from https://developer.android.com/guide/topics/ui/controls/spinner-->
     <string-array name="planets_array">
         <item>Mercury</item>
         <item>Venus</item>
@@ -17,15 +18,14 @@
         <item>Uranus</item>
         <item>Neptune</item>
     </string-array>
-    <string-array name="some_shit">
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
+    <!--form https://www.geeksforgeeks.org/spinner-in-kotlin/-->
+    <string-array name="Languages">
+        <item>Java</item>
+        <item>Kotlin</item>
+        <item>Swift</item>
+        <item>Python</item>
+        <item>Scala</item>
+        <item>Perl</item>
     </string-array>
 
 </resources>

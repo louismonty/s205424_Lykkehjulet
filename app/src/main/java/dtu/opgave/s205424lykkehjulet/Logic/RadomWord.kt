@@ -13,7 +13,7 @@ class RadomWord {
         if(stringCategory == "planets_array") {
             stringArray = res.getStringArray(R.array.planets_array)
         }else{
-            stringArray = res.getStringArray(R.array.some_shit)
+            stringArray = res.getStringArray(R.array.Languages)
         }
 
 
