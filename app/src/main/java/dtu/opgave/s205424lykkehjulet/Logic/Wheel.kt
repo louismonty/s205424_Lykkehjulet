@@ -14,18 +14,18 @@ class Wheel {
         val spin = Random.nextInt(1,14)
         var ret:Int
         if(spin<11){
-            view.findViewById<TextView>(R.id.spinText).text =   "Du får:" + (spin*100).toString()
+            view.findViewById<TextView>(R.id.spinText).text =   "You get:" + (spin*100).toString() + "per letter you guees"
             ret = spin *100
         }else if(spin == 11){
-            view.findViewById<TextView>(R.id.spinText).text =   "Du gik bankrupt"
+            view.findViewById<TextView>(R.id.spinText).text =   "You went bankrupt"
             viewModel.score.value = 0
             ret = 0
         }else if(spin == 12){
-            view.findViewById<TextView>(R.id.spinText).text =   "Du fik en ekstra tur"
+            view.findViewById<TextView>(R.id.spinText).text =   "You got a extra turn"
             ret = 0
             lives.add(WordModel('t',true))
         }else{
-            view.findViewById<TextView>(R.id.spinText).text =   "Du mistede en tur"
+            view.findViewById<TextView>(R.id.spinText).text =   "You lost a turn"
             ret = 0
             lives.removeAt(lives.size - 1)
         }
